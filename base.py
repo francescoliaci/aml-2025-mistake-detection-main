@@ -53,10 +53,17 @@ def fetch_model(config):
     # ! AGGIUNTO
     elif config.variant == const.LSTM_VARIANT:
         if config.backbone in [const.OMNIVORE, const.RESNET3D, const.X3D, const.SLOWFAST, const.IMAGEBIND]:
+            from core.models.blocks import LSTMBaseline
             input_dim = fetch_input_dim(config)
-            # puoi cambiare hidden_size / num_layers se vuoi
-            from core.models.blocks import LSTMBaseline # ! DA SPOSTARE SOPRA
-            model = LSTMBaseline(input_size=input_dim, hidden_size=256, num_layers=1)
+
+            model = LSTMBaseline(
+                input_size=input_dim,
+                hidden_size=256,
+                num_layers=1,
+                bidirectional=True,
+                dropout=0.3
+            )
+
 
     assert model is not None, f"Model not found for variant: {config.variant} and backbone: {config.backbone}"
     model.to(config.device)
