@@ -55,15 +55,7 @@ def fetch_model(config):
         if config.backbone in [const.OMNIVORE, const.RESNET3D, const.X3D, const.SLOWFAST, const.IMAGEBIND]:
             from core.models.blocks import LSTMBaseline
             input_dim = fetch_input_dim(config)
-
-            model = LSTMBaseline(
-                input_size=input_dim,
-                hidden_size=256,
-                num_layers=1,
-                bidirectional=True,
-                dropout=0.3
-            )
-
+            model = LSTMBaseline(input_size=input_dim, hidden_size=256)
 
     assert model is not None, f"Model not found for variant: {config.variant} and backbone: {config.backbone}"
     model.to(config.device)
@@ -165,6 +157,7 @@ def train_epoch(model, device, train_loader, optimizer, epoch, criterion):
 
 def train_model_base(train_loader, val_loader, config, test_loader=None):
     model = fetch_model(config)
+    print("\n=== USING MODEL ===\n", model, "\n")
     device = config.device
     optimizer = optim.Adam(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
     criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([2.5], dtype=torch.float32).to(device))
