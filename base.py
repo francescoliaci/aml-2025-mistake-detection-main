@@ -198,6 +198,7 @@ def train_model_base(train_loader, val_loader, config, test_loader=None):
 
                 optimizer.zero_grad()
                 output = model(data)
+                # ! CHANGE HERE
                 if target.dim() == 2 and target.size(-1) == 1:
                   target = target.squeeze(-1)
                 loss = criterion(output, target)
@@ -343,6 +344,7 @@ def test_er_model(model, test_loader, criterion, device, phase, step_normalizati
     with torch.no_grad():
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
+            # ! CHANGE HERE
             if target.dim() == 2 and target.size(-1) == 1:
               target = target.squeeze(-1)
             output = model(data)
